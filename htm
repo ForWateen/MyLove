@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Birthday Wateeni</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #1a0a0a;
+            --accent-color: #d4af37;
+            --text-color: #f8f1f1;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: 'Playfair Display', serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            overflow-x: hidden;
+            text-align: center;
+        }
+
+        .stars {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle at center, #2c0e0e 0%, #1a0a0a 100%);
+            z-index: -1;
+        }
+
+        .container {
+            padding: 20px;
+            animation: fadeIn 3s ease-in;
+            z-index: 1;
+        }
+
+        h1 {
+            font-size: 2.2rem;
+            letter-spacing: 2px;
+            margin-bottom: 10px;
+            color: var(--accent-color);
+            text-shadow: 0 0 15px rgba(212, 175, 55, 0.5);
+        }
+
+        .name-highlight {
+            font-family: 'Playfair Display', serif;
+            font-size: 4.5rem;
+            font-weight: 700;
+            font-style: italic;
+            color: var(--text-color);
+            margin-bottom: 40px;
+            display: block;
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+        }
+
+        .record-player {
+            position: relative;
+            cursor: pointer;
+            width: 220px;
+            height: 220px;
+            margin: 0 auto;
+        }
+
+        .record {
+            width: 100%; height: 100%;
+            background: #111;
+            border-radius: 50%;
+            border: 4px solid #222;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 30px rgba(0,0,0,0.8);
+        }
+
+        .record-label {
+            width: 70px; height: 70px;
+            background: var(--accent-color);
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #000;
+            font-weight: bold;
+            font-size: 0.6rem;
+            border: 2px solid #000;
+        }
+
+        .spinning {
+            animation: rotateRecord 4s linear infinite;
+        }
+
+        @keyframes rotateRecord {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .instruction {
+            margin-top: 25px;
+            font-family: 'Cairo', sans-serif;
+            font-size: 1rem;
+            color: var(--accent-color);
+            opacity: 0.8;
+        }
+
+        .heart {
+            position: absolute;
+            color: var(--accent-color);
+            opacity: 0.3;
+            animation: float 6s infinite linear;
+            pointer-events: none;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(100vh) rotate(0deg); }
+            100% { transform: translateY(-10vh) rotate(360deg); }
+        }
+
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    </style>
+</head>
+<body>
+
+    <div class="stars"></div>
+
+    <div class="container">
+        <h1>Happy Birthday to my LOVE OF MY LIFE</h1>
+        <span class="name-highlight">Wateeni</span>
+
+        <div class="record-player" onclick="toggleMusic()">
+            <div class="record" id="record-disk">
+                <div class="record-label">
+                    <span>Sofia</span>
+                    <span style="font-size: 0.5rem;">Clairo</span>
+                </div>
+            </div>
+            <p class="instruction" id="hint-text">اضغطي هنا للموسيقى ✨</p>
+        </div>
+    </div>
+
+    <div id="player" style="display: none;"></div>
+
+    <script>
+        var tag = document.createElement('script');
+        tag.src = "https://www.youtube.com/iframe_api";
+        var firstScriptTag = document.getElementsByTagName('script')[0];
+        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+        var player;
+        function onYouTubeIframeAPIReady() {
+            player = new YT.Player('player', {
+                height: '0', width: '0',
+                videoId: 'hJn4Abio0DM', // فيديو "Sofia"
+                playerVars: { 'autoplay': 0, 'controls': 0 }
+            });
+        }
+
+        function toggleMusic() {
+            const record = document.getElementById('record-disk');
+            const hint = document.getElementById('hint-text');
+
+            if (player && player.getPlayerState() !== 1) {
+                player.playVideo();
+                record.classList.add('spinning');
+                hint.innerText = "Listening with love...";
+            } else {
+                player.pauseVideo();
+                record.classList.remove('spinning');
+                hint.innerText = "Paused";
+            }
+        }
+
+        function createHeart() {
+            const heart = document.createElement('div');
+            heart.classList.add('heart');
+            heart.innerHTML = '❤';
+            heart.style.left = Math.random() * 100 + 'vw';
+            heart.style.animationDuration = Math.random() * 3 + 3 + 's';
+            heart.style.fontSize = Math.random() * 20 + 10 + 'px';
+            document.body.appendChild(heart);
+            setTimeout(() => { heart.remove(); }, 6000);
+        }
+        setInterval(createHeart, 500);
+    </script>
+</body>
+</html>
