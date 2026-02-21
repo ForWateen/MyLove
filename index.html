@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>For Wateeni</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
     <style>
@@ -12,18 +12,18 @@
             --text-color: #f8f1f1;
         }
 
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
         body, html {
-            margin: 0;
-            padding: 0;
-            width: 100%;
-            height: 100%;
+            margin: 0; padding: 0;
+            width: 100%; height: 100%;
             background-color: var(--bg-color);
             color: var(--text-color);
             font-family: 'Playfair Display', serif;
             overflow: hidden;
         }
 
-        /* شاشة السؤال عن السماعات */
+        /* شاشة السؤال الإبداعية */
         #overlay {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -32,43 +32,57 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            z-index: 100;
-            transition: opacity 1s ease;
+            z-index: 1000;
+            transition: opacity 1.5s ease-in-out;
+            padding: 20px;
         }
 
         #overlay h2 {
             color: var(--accent-color);
-            font-size: 1.8rem;
-            margin-bottom: 30px;
+            font-size: clamp(1.5rem, 5vw, 2.5rem);
+            margin-bottom: 40px;
             font-style: italic;
+            animation: textGlow 2s ease-in-out infinite alternate;
+            max-width: 80%;
+            line-height: 1.4;
+        }
+
+        @keyframes textGlow {
+            from { text-shadow: 0 0 5px #fff, 0 0 10px var(--accent-color); }
+            to { text-shadow: 0 0 20px #fff, 0 0 30px var(--accent-color); }
         }
 
         #overlay button {
-            background: none;
+            background: transparent;
             border: 1px solid var(--accent-color);
             color: var(--accent-color);
-            padding: 10px 40px;
+            padding: 15px 60px;
             font-size: 1.2rem;
             cursor: pointer;
             font-family: 'Playfair Display', serif;
-            transition: 0.3s;
+            transition: 0.4s;
+            letter-spacing: 2px;
+            text-transform: uppercase;
         }
 
         #overlay button:hover {
             background: var(--accent-color);
             color: var(--bg-color);
+            box-shadow: 0 0 20px var(--accent-color);
         }
 
-        /* محتوى الموقع الأساسي */
+        /* الخلفية والنجوم */
         .main-content {
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            height: 100vh;
+            height: 100%;
+            width: 100%;
             text-align: center;
             opacity: 0;
-            transition: opacity 2s ease;
+            transition: opacity 2.5s ease;
+            position: relative;
         }
 
         .stars {
@@ -78,26 +92,29 @@
             z-index: -1;
         }
 
+        /* المحتوى الرئيسي */
         h1 {
-            font-size: 2rem;
+            font-size: clamp(1rem, 4vw, 1.8rem);
             color: var(--accent-color);
-            margin-bottom: 10px;
+            margin-bottom: 5px;
             letter-spacing: 1px;
+            font-weight: 400;
         }
 
         .name-highlight {
-            font-size: 4.5rem;
+            font-size: clamp(3rem, 12vw, 5.5rem);
             font-weight: 700;
             font-style: italic;
-            margin-bottom: 30px;
-            text-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+            margin-bottom: 20px;
+            text-shadow: 0 0 25px rgba(255, 255, 255, 0.3);
         }
 
+        /* الأسطوانة المتجاوبة */
         .record-player {
             position: relative;
-            width: 220px;
-            height: 220px;
-            margin: 0 auto;
+            width: clamp(180px, 50vw, 250px);
+            height: clamp(180px, 50vw, 250px);
+            margin: 20px auto;
         }
 
         .record {
@@ -108,11 +125,12 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 0 30px rgba(0,0,0,0.8);
+            box-shadow: 0 0 40px rgba(0,0,0,0.9);
+            background: repeating-radial-gradient(circle, #1a1a1a, #111 2px, #1a1a1a 4px);
         }
 
         .record-label {
-            width: 70px; height: 70px;
+            width: 30%; height: 30%;
             background: var(--accent-color);
             border-radius: 50%;
             display: flex;
@@ -120,44 +138,44 @@
             align-items: center;
             justify-content: center;
             color: #000;
-            font-size: 0.6rem;
+            font-size: clamp(0.4rem, 2vw, 0.7rem);
             font-weight: bold;
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
         }
 
         .spinning {
-            animation: rotateRecord 4s linear infinite;
-        }
-
-        @keyframes rotateRecord {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
+            animation: rotateRecord 5s linear infinite;
         }
 
         .from-credit {
-            margin-top: 40px;
+            margin-top: 30px;
             font-style: italic;
             color: var(--accent-color);
-            font-size: 1.1rem;
+            font-size: clamp(1rem, 3vw, 1.4rem);
+            letter-spacing: 1px;
         }
 
+        /* قلوب الحب */
         .heart {
             position: absolute;
             color: var(--accent-color);
-            opacity: 0.2;
-            animation: float 6s infinite linear;
+            opacity: 0.15;
+            animation: float 7s infinite linear;
             pointer-events: none;
         }
 
         @keyframes float {
-            0% { transform: translateY(100vh) rotate(0deg); }
-            100% { transform: translateY(-10vh) rotate(360deg); }
+            0% { transform: translateY(110vh) rotate(0deg); opacity: 0; }
+            20% { opacity: 0.2; }
+            80% { opacity: 0.2; }
+            100% { transform: translateY(-15vh) rotate(360deg); opacity: 0; }
         }
     </style>
 </head>
 <body>
 
     <div id="overlay">
-        <h2>First, did you wear your headphones?</h2>
+        <h2 id="question">First, did you wear your headphones?</h2>
         <button onclick="startExperience()">Yes</button>
     </div>
 
@@ -168,10 +186,9 @@
         <div class="name-highlight">Wateeni</div>
 
         <div class="record-player">
-            <div class="record spinning" id="record-disk">
+            <div class="record" id="record-disk">
                 <div class="record-label">
                     <span>Sofia</span>
-                    <span style="font-size: 0.4rem;">Clairo</span>
                 </div>
             </div>
         </div>
@@ -179,7 +196,7 @@
         <div class="from-credit">From Azoozi</div>
     </div>
 
-    <div id="player"></div>
+    <div id="player" style="position: absolute; top: -1000px;"></div>
 
     <script>
         var tag = document.createElement('script');
@@ -193,21 +210,31 @@
                 height: '0',
                 width: '0',
                 videoId: 'hJn4Abio0DM',
-                playerVars: { 'autoplay': 0, 'controls': 0 }
+                playerVars: { 
+                    'autoplay': 0, 
+                    'controls': 0, 
+                    'modestbranding': 1, 
+                    'playsinline': 1 // مهم جداً للآيفون لكي يعمل في الخلفية
+                }
             });
         }
 
         function startExperience() {
-            // إخفاء شاشة السؤال
-            document.getElementById('overlay').style.opacity = '0';
+            const overlay = document.getElementById('overlay');
+            const mainUI = document.getElementById('main-ui');
+            const record = document.getElementById('record-disk');
+
+            overlay.style.opacity = '0';
+            
             setTimeout(() => {
-                document.getElementById('overlay').style.display = 'none';
-                // إظهار المحتوى وتشغيل الموسيقى
-                document.getElementById('main-ui').style.opacity = '1';
-                if (player) {
+                overlay.style.display = 'none';
+                mainUI.style.opacity = '1';
+                
+                if (player && typeof player.playVideo === 'function') {
                     player.playVideo();
+                    record.classList.add('spinning');
                 }
-            }, 1000);
+            }, 1500);
         }
 
         function createHeart() {
@@ -215,12 +242,12 @@
             heart.classList.add('heart');
             heart.innerHTML = '❤';
             heart.style.left = Math.random() * 100 + 'vw';
-            heart.style.animationDuration = Math.random() * 3 + 3 + 's';
-            heart.style.fontSize = Math.random() * 15 + 10 + 'px';
+            heart.style.animationDuration = (Math.random() * 4 + 4) + 's';
+            heart.style.fontSize = (Math.random() * 15 + 10) + 'px';
             document.body.appendChild(heart);
-            setTimeout(() => { heart.remove(); }, 6000);
+            setTimeout(() => { heart.remove(); }, 7000);
         }
-        setInterval(createHeart, 600);
+        setInterval(createHeart, 500);
     </script>
 </body>
 </html>
