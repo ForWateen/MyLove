@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Birthday My Love</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #1a0a0a;
+            --accent-color: #d4af37;
+            --text-color: #f8f1f1;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: 'Playfair Display', serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            overflow-x: hidden;
+            text-align: center;
+        }
+
+        .stars {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at center, #2c0e0e 0%, #1a0a0a 100%);
+            z-index: -1;
+        }
+
+        .container {
+            padding: 20px;
+            animation: fadeIn 3s ease-in;
+            z-index: 1;
+        }
+
+        h1 {
+            font-size: 2.8rem;
+            letter-spacing: 2px;
+            margin-bottom: 60px;
+            color: var(--accent-color);
+            text-shadow: 0 0 15px rgba(212, 175, 55, 0.5);
+        }
+
+        /* تصميم الأسطوانة الموسيقية */
+        .record-player {
+            position: relative;
+            cursor: pointer;
+            width: 250px;
+            height: 250px;
+            margin: 0 auto;
+        }
+
+        .record {
+            width: 100%;
+            height: 100%;
+            background: #111;
+            border-radius: 50%;
+            border: 5px solid #222;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            box-shadow: 0 0 30px rgba(0,0,0,0.8);
+            transition: all 0.5s ease;
+        }
+
+        .record-label {
+            width: 80px;
+            height: 80px;
+            background: var(--accent-color);
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: var(--bg-color);
+            font-weight: bold;
+            font-size: 0.7rem;
+            border: 2px solid #000;
+        }
+
+        /* حركة الدوران */
+        .spinning {
+            animation: rotateRecord 4s linear infinite;
+        }
+
+        @keyframes rotateRecord {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .instruction {
+            margin-top: 30px;
+            font-size: 0.9rem;
+            color: var(--accent-color);
+            letter-spacing: 1px;
+            opacity: 0.7;
+        }
+
+        .heart {
+            position: absolute;
+            color: var(--accent-color);
+            opacity: 0.3;
+            animation: float 6s infinite linear;
+            pointer-events: none;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(100vh) rotate(0deg); }
+            100% { transform: translateY(-10vh) rotate(360deg); }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="stars"></div>
+
+    <div class="container">
+        <h1>Happy Birthday to my <br> LOVE OF MY LIFE</h1>
+
+        <div class="record-player" onclick="toggleMusic()">
+            <div class="record" id="record-disk">
+                <div class="record-label">
+                    <span>Sofia</span>
+                    <span style="font-size: 0.5rem;">Clairo</span>
+                </div>
+            </div>
+            <p class="instruction" id="hint-text">Click to Play</p>
+        </div>
+    </div>
+
+    <audio id="sofia-song" loop>
+        <source src="https://files.freemusicarchive.org/storage-freemusicarchive-org/music/no_curator/Ketsa/Raising_Frequency/Ketsa_-_09_-_Warm_Glow.mp3" type="audio/mpeg">
+        </audio>
+
+    <script>
+        function toggleMusic() {
+            const audio = document.getElementById('sofia-song');
+            const record = document.getElementById('record-disk');
+            const hint = document.getElementById('hint-text');
+
+            if (audio.paused) {
+                audio.play();
+                record.classList.add('spinning');
+                hint.innerText = "Now Playing...";
+            } else {
+                audio.pause();
+                record.classList.remove('spinning');
+                hint.innerText = "Paused";
+            }
+        }
+
+        function createHeart() {
+            const heart = document.createElement('div');
+            heart.classList.add('heart');
+            heart.
