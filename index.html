@@ -199,7 +199,7 @@
         <div class="from-credit">From Azoozi</div>
     </div>
 
-    <div id="player" style="position: absolute; top: -1000px;"></div>
+    <div id="player"></div>
 
     <script>
         var tag = document.createElement('script');
@@ -210,10 +210,23 @@
         var player;
         function onYouTubeIframeAPIReady() {
             player = new YT.Player('player', {
-                height: '0', width: '0',
-                videoId: 't0V7fR_G6L8', // معرف فيديو أغنية رابح صقر - غرام أطفال
-                playerVars: { 'autoplay': 0, 'controls': 0, 'playsinline': 1 }
+                height: '0',
+                width: '0',
+                videoId: 'xuupa3C3nlI', 
+                playerVars: {
+                    'autoplay': 0,
+                    'controls': 0,
+                    'playsinline': 1,
+                    'enablejsapi': 1
+                },
+                events: {
+                    'onReady': onPlayerReady
+                }
             });
+        }
+
+        function onPlayerReady(event) {
+            // المشغل جاهز الآن
         }
 
         function startExperience() {
@@ -227,9 +240,9 @@
 
         function toggleMusic() {
             const record = document.getElementById('record-disk');
-            if (player) {
+            if (player && player.getPlayerState) {
                 const state = player.getPlayerState();
-                if (state === 1) { 
+                if (state === 1) { // 1 تعني أن الفيديو يعمل حالياً
                     player.pauseVideo();
                     record.classList.remove('spinning');
                 } else {
