@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>For Wateeni</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Amiri:ital@1&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #1a0a0a;
+            --accent-color: #d4af37;
+            --text-color: #f8f1f1;
+        }
+
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+        body, html {
+            margin: 0; padding: 0;
+            width: 100%; height: 100%;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: 'Playfair Display', serif;
+            overflow: hidden;
+        }
+
+        /* شاشة السؤال */
+        #overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-color: var(--bg-color);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            transition: opacity 1.5s ease-in-out;
+            padding: 20px;
+        }
+
+        #overlay h2 {
+            color: var(--accent-color);
+            font-size: clamp(1.2rem, 5vw, 2rem);
+            margin-bottom: 40px;
+            font-style: italic;
+            text-align: center;
+        }
+
+        #overlay button {
+            background: transparent;
+            border: 1px solid var(--accent-color);
+            color: var(--accent-color);
+            padding: 12px 50px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            font-family: 'Playfair Display', serif;
+        }
+
+        /* المحتوى الرئيسي */
+        .main-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            width: 100%;
+            max-width: 600px; /* لضمان توازي النص في المنتصف */
+            margin: 0 auto;
+            text-align: center;
+            opacity: 0;
+            transition: opacity 2.5s ease;
+            padding: 20px;
+        }
+
+        .stars {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle at center, #2c0e0e 0%, #1a0a0a 100%);
+            z-index: -1;
+        }
+
+        .hb-title {
+            font-size: clamp(0.9rem, 3vw, 1.4rem);
+            color: var(--accent-color);
+            margin-bottom: 5px;
+            font-weight: 400;
+        }
+
+        .name-highlight {
+            font-size: clamp(2.5rem, 10vw, 4.5rem);
+            font-weight: 700;
+            font-style: italic;
+            margin-bottom: 15px;
+            color: var(--text-color);
+        }
+
+        /* الأسطوانة */
+        .record-player {
+            position: relative;
+            width: clamp(150px, 45vw, 220px);
+            height: clamp(150px, 45vw, 220px);
+            margin: 15px auto;
+            cursor: pointer;
+            z-index: 10;
+        }
+
+        .record {
+            width: 100%; height: 100%;
+            background: #111;
+            border-radius: 50%;
+            border: 4px solid #222;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 30px rgba(0,0,0,0.9);
+            background: repeating-radial-gradient(circle, #1a1a1a, #111 2px, #1a1a1a 4px);
+        }
+
+        .record-label {
+            width: 35%; height: 35%;
+            background: var(--accent-color);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: #1a0a0a;
+            font-weight: bold;
+            font-size: clamp(0.5rem, 2vw, 0.7rem);
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.3);
+            pointer-events: none;
+        }
+
+        .spinning {
+            animation: rotateRecord 5s linear infinite;
+        }
+
+        @keyframes rotateRecord {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        /* تنسيق النص الموازي */
+        .instruction {
+            margin-top: 20px;
+            font-family: 'Amiri', serif; /* خط عربي فخم */
+            font-style: italic;
+            color: var(--text-color);
+            font-size: clamp(0.9rem, 3.5vw, 1.2rem);
+            line-height: 1.8;
+            max-width: 90%;
+            direction: rtl; /* لضمان توازي النص العربي */
+        }
+
+        .from-credit {
+            margin-top: 25px;
+            font-style: italic;
+            color: var(--accent-color);
+            font-size: 1.1rem;
+        }
+
+        /* القلوب */
+        .heart {
+            position: absolute;
+            color: var(--accent-color);
+            pointer-events: none;
+            z-index: 5;
+            bottom: -50px;
+            animation: floatUp linear forwards;
+        }
+
+        @keyframes floatUp {
+            0% { transform: translateY(0) rotate(0deg); opacity: 0; }
+            10% { opacity: 0.6; }
+            90% { opacity: 0.6; }
+            100% { transform: translateY(-110vh) rotate(360deg); opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="overlay">
+        <h2>First, did you wear your headphones?</h2>
+        <button onclick="startExperience()">Yes</button>
+    </div>
+
+    <div class="stars"></div>
+
+    <div class="main-content" id="main-ui">
+        <div class="hb-title">Happy Birthday to my LOVE OF MY LIFE</div>
+        <div class="name-highlight">Wateeni</div>
+
+        <div class="record-player" onclick="toggleMusic()">
+            <div class="record" id="record-disk">
+                <div class="record-label">
+                    <span>PUSH<br>ME</span>
+                </div>
+            </div>
+        </div>
+
+        <p class="instruction" id="hint-text">
+            حبينا بعض من عمر صغير، ورجعنا وصرنا مع بعض بعمر اكبر، وكأن القدر يبينا لبعض طول العمر.. هالقصة توصفها أغنية وحده - غرام اطفال - 👸
+        </p>
+        
+        <div class="from-credit">From Azoozi</div>
+    </div>
+
+    <div id="player" style="position: absolute; top: -1000px;"></div>
+
+    <script>
+        var tag = document.createElement('script');
+        tag.src = "https://www.youtube.com/iframe_api";
+        var firstScriptTag = document.getElementsByTagName('script')[0];
+        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+        var player;
+        function onYouTubeIframeAPIReady() {
+            player = new YT.Player('player', {
+                height: '0', width: '0',
+                videoId: 'hJn4Abio0DM', // فيديو غرام أطفال - رابح صقر
+                playerVars: { 'autoplay': 0, 'controls': 0, 'playsinline': 1 }
+            });
+        }
+
+        function startExperience() {
+            document.getElementById('overlay').style.opacity = '0';
+            setTimeout(() => {
+                document.getElementById('overlay').style.display = 'none';
+                document.getElementById('main-ui').style.opacity = '1';
+                setInterval(createHeart, 250); 
+            }, 1000);
+        }
+
+        function toggleMusic() {
+            const record = document.getElementById('record-disk');
+            if (player) {
+                const state = player.getPlayerState();
+                if (state === 1) { 
+                    player.pauseVideo();
+                    record.classList.remove('spinning');
+                } else {
+                    player.playVideo();
+                    record.classList.add('spinning');
+                }
+            }
+        }
+
+        function createHeart() {
+            const heart = document.createElement('div');
+            heart.className = 'heart';
+            heart.innerHTML = '❤';
+            heart.style.left = Math.random() * 100 + 'vw';
+            const duration = Math.random() * 3 + 4;
+            heart.style.animationDuration = duration + 's';
+            heart.style.fontSize = Math.random() * 15 + 15 + 'px';
+            document.body.appendChild(heart);
+            setTimeout(() => { heart.remove(); }, duration * 1000);
+        }
+    </script>
+</body>
+</html>
