@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Happy Birthday Wateeni</title>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+    <title>For Wateeni</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
     <style>
         :root {
             --bg-color: #1a0a0a;
@@ -12,19 +12,63 @@
             --text-color: #f8f1f1;
         }
 
-        body {
+        body, html {
             margin: 0;
             padding: 0;
+            width: 100%;
+            height: 100%;
             background-color: var(--bg-color);
             color: var(--text-color);
             font-family: 'Playfair Display', serif;
+            overflow: hidden;
+        }
+
+        /* شاشة السؤال عن السماعات */
+        #overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-color: var(--bg-color);
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            min-height: 100vh;
-            overflow-x: hidden;
+            z-index: 100;
+            transition: opacity 1s ease;
+        }
+
+        #overlay h2 {
+            color: var(--accent-color);
+            font-size: 1.8rem;
+            margin-bottom: 30px;
+            font-style: italic;
+        }
+
+        #overlay button {
+            background: none;
+            border: 1px solid var(--accent-color);
+            color: var(--accent-color);
+            padding: 10px 40px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            font-family: 'Playfair Display', serif;
+            transition: 0.3s;
+        }
+
+        #overlay button:hover {
+            background: var(--accent-color);
+            color: var(--bg-color);
+        }
+
+        /* محتوى الموقع الأساسي */
+        .main-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
             text-align: center;
+            opacity: 0;
+            transition: opacity 2s ease;
         }
 
         .stars {
@@ -34,34 +78,23 @@
             z-index: -1;
         }
 
-        .container {
-            padding: 20px;
-            animation: fadeIn 3s ease-in;
-            z-index: 1;
-        }
-
         h1 {
-            font-size: 2.2rem;
-            letter-spacing: 2px;
-            margin-bottom: 10px;
+            font-size: 2rem;
             color: var(--accent-color);
-            text-shadow: 0 0 15px rgba(212, 175, 55, 0.5);
+            margin-bottom: 10px;
+            letter-spacing: 1px;
         }
 
         .name-highlight {
-            font-family: 'Playfair Display', serif;
             font-size: 4.5rem;
             font-weight: 700;
             font-style: italic;
-            color: var(--text-color);
-            margin-bottom: 40px;
-            display: block;
+            margin-bottom: 30px;
             text-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
         }
 
         .record-player {
             position: relative;
-            cursor: pointer;
             width: 220px;
             height: 220px;
             margin: 0 auto;
@@ -87,9 +120,8 @@
             align-items: center;
             justify-content: center;
             color: #000;
-            font-weight: bold;
             font-size: 0.6rem;
-            border: 2px solid #000;
+            font-weight: bold;
         }
 
         .spinning {
@@ -101,22 +133,11 @@
             to { transform: rotate(360deg); }
         }
 
-        .instruction {
-            margin-top: 25px;
-            font-family: 'Playfair Display', serif;
-            font-size: 1rem;
-            color: var(--accent-color);
-            opacity: 0.8;
-            letter-spacing: 1px;
-        }
-
         .from-credit {
-            margin-top: 50px;
-            font-family: 'Playfair Display', serif;
+            margin-top: 40px;
             font-style: italic;
-            font-size: 1.2rem;
             color: var(--accent-color);
-            opacity: 0.9;
+            font-size: 1.1rem;
         }
 
         .heart {
@@ -131,32 +152,34 @@
             0% { transform: translateY(100vh) rotate(0deg); }
             100% { transform: translateY(-10vh) rotate(360deg); }
         }
-
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
     </style>
 </head>
 <body>
 
+    <div id="overlay">
+        <h2>First, did you wear your headphones?</h2>
+        <button onclick="startExperience()">Yes</button>
+    </div>
+
     <div class="stars"></div>
 
-    <div class="container">
+    <div class="main-content" id="main-ui">
         <h1>Happy Birthday to my LOVE OF MY LIFE</h1>
-        <span class="name-highlight">Wateeni</span>
+        <div class="name-highlight">Wateeni</div>
 
-        <div class="record-player" onclick="toggleMusic()">
-            <div class="record" id="record-disk">
+        <div class="record-player">
+            <div class="record spinning" id="record-disk">
                 <div class="record-label">
                     <span>Sofia</span>
                     <span style="font-size: 0.4rem;">Clairo</span>
                 </div>
             </div>
-            <p class="instruction" id="hint-text">Click to Play</p>
         </div>
 
         <div class="from-credit">From Azoozi</div>
     </div>
 
-    <div id="player" style="display: none;"></div>
+    <div id="player"></div>
 
     <script>
         var tag = document.createElement('script');
@@ -167,25 +190,24 @@
         var player;
         function onYouTubeIframeAPIReady() {
             player = new YT.Player('player', {
-                height: '0', width: '0',
+                height: '0',
+                width: '0',
                 videoId: 'hJn4Abio0DM',
                 playerVars: { 'autoplay': 0, 'controls': 0 }
             });
         }
 
-        function toggleMusic() {
-            const record = document.getElementById('record-disk');
-            const hint = document.getElementById('hint-text');
-
-            if (player && player.getPlayerState() !== 1) {
-                player.playVideo();
-                record.classList.add('spinning');
-                hint.innerText = "Listening with love";
-            } else {
-                player.pauseVideo();
-                record.classList.remove('spinning');
-                hint.innerText = "Paused";
-            }
+        function startExperience() {
+            // إخفاء شاشة السؤال
+            document.getElementById('overlay').style.opacity = '0';
+            setTimeout(() => {
+                document.getElementById('overlay').style.display = 'none';
+                // إظهار المحتوى وتشغيل الموسيقى
+                document.getElementById('main-ui').style.opacity = '1';
+                if (player) {
+                    player.playVideo();
+                }
+            }, 1000);
         }
 
         function createHeart() {
