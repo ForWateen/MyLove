@@ -23,7 +23,6 @@
             overflow: hidden;
         }
 
-        /* شاشة السؤال الإبداعية */
         #overlay {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -42,14 +41,8 @@
             font-size: clamp(1.5rem, 5vw, 2.5rem);
             margin-bottom: 40px;
             font-style: italic;
-            animation: textGlow 2s ease-in-out infinite alternate;
-            max-width: 80%;
+            text-align: center;
             line-height: 1.4;
-        }
-
-        @keyframes textGlow {
-            from { text-shadow: 0 0 5px #fff, 0 0 10px var(--accent-color); }
-            to { text-shadow: 0 0 20px #fff, 0 0 30px var(--accent-color); }
         }
 
         #overlay button {
@@ -61,17 +54,9 @@
             cursor: pointer;
             font-family: 'Playfair Display', serif;
             transition: 0.4s;
-            letter-spacing: 2px;
             text-transform: uppercase;
         }
 
-        #overlay button:hover {
-            background: var(--accent-color);
-            color: var(--bg-color);
-            box-shadow: 0 0 20px var(--accent-color);
-        }
-
-        /* الخلفية والنجوم */
         .main-content {
             display: flex;
             flex-direction: column;
@@ -82,7 +67,6 @@
             text-align: center;
             opacity: 0;
             transition: opacity 2.5s ease;
-            position: relative;
         }
 
         .stars {
@@ -92,12 +76,10 @@
             z-index: -1;
         }
 
-        /* المحتوى الرئيسي */
         h1 {
             font-size: clamp(1rem, 4vw, 1.8rem);
             color: var(--accent-color);
             margin-bottom: 5px;
-            letter-spacing: 1px;
             font-weight: 400;
         }
 
@@ -106,15 +88,14 @@
             font-weight: 700;
             font-style: italic;
             margin-bottom: 20px;
-            text-shadow: 0 0 25px rgba(255, 255, 255, 0.3);
         }
 
-        /* الأسطوانة المتجاوبة */
         .record-player {
             position: relative;
             width: clamp(180px, 50vw, 250px);
             height: clamp(180px, 50vw, 250px);
             margin: 20px auto;
+            cursor: pointer;
         }
 
         .record {
@@ -140,7 +121,6 @@
             color: #000;
             font-size: clamp(0.4rem, 2vw, 0.7rem);
             font-weight: bold;
-            box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
         }
 
         .spinning {
@@ -152,30 +132,29 @@
             font-style: italic;
             color: var(--accent-color);
             font-size: clamp(1rem, 3vw, 1.4rem);
-            letter-spacing: 1px;
         }
 
-        /* قلوب الحب */
         .heart {
             position: absolute;
             color: var(--accent-color);
-            opacity: 0.15;
-            animation: float 7s infinite linear;
+            opacity: 0;
+            animation: float Up 6s infinite linear;
             pointer-events: none;
+            z-index: 5;
         }
 
         @keyframes float {
-            0% { transform: translateY(110vh) rotate(0deg); opacity: 0; }
-            20% { opacity: 0.2; }
-            80% { opacity: 0.2; }
-            100% { transform: translateY(-15vh) rotate(360deg); opacity: 0; }
+            0% { transform: translateY(110vh) translateX(0) rotate(0deg); opacity: 0; }
+            10% { opacity: 0.4; }
+            90% { opacity: 0.4; }
+            100% { transform: translateY(-20vh) translateX(20px) rotate(360deg); opacity: 0; }
         }
     </style>
 </head>
 <body>
 
     <div id="overlay">
-        <h2 id="question">First, did you wear your headphones?</h2>
+        <h2>First, did you wear your headphones?</h2>
         <button onclick="startExperience()">Yes</button>
     </div>
 
@@ -185,7 +164,7 @@
         <h1>Happy Birthday to my LOVE OF MY LIFE</h1>
         <div class="name-highlight">Wateeni</div>
 
-        <div class="record-player">
+        <div class="record-player" onclick="toggleMusic()">
             <div class="record" id="record-disk">
                 <div class="record-label">
                     <span>Sofia</span>
@@ -207,34 +186,34 @@
         var player;
         function onYouTubeIframeAPIReady() {
             player = new YT.Player('player', {
-                height: '0',
-                width: '0',
+                height: '0', width: '0',
                 videoId: 'hJn4Abio0DM',
-                playerVars: { 
-                    'autoplay': 0, 
-                    'controls': 0, 
-                    'modestbranding': 1, 
-                    'playsinline': 1 // مهم جداً للآيفون لكي يعمل في الخلفية
-                }
+                playerVars: { 'autoplay': 0, 'controls': 0, 'playsinline': 1 }
             });
         }
 
         function startExperience() {
-            const overlay = document.getElementById('overlay');
-            const mainUI = document.getElementById('main-ui');
-            const record = document.getElementById('record-disk');
-
-            overlay.style.opacity = '0';
-            
+            document.getElementById('overlay').style.opacity = '0';
             setTimeout(() => {
-                overlay.style.display = 'none';
-                mainUI.style.opacity = '1';
-                
-                if (player && typeof player.playVideo === 'function') {
+                document.getElementById('overlay').style.display = 'none';
+                document.getElementById('main-ui').style.opacity = '1';
+                if (player) { player.playVideo(); document.getElementById('record-disk').classList.add('spinning'); }
+            }, 1000);
+        }
+
+        // دالة التحكم بالتشغيل والإيقاف
+        function toggleMusic() {
+            const record = document.getElementById('record-disk');
+            if (player) {
+                const state = player.getPlayerState();
+                if (state === 1) { // 1 = Playing
+                    player.pauseVideo();
+                    record.classList.remove('spinning');
+                } else {
                     player.playVideo();
                     record.classList.add('spinning');
                 }
-            }, 1500);
+            }
         }
 
         function createHeart() {
@@ -242,12 +221,13 @@
             heart.classList.add('heart');
             heart.innerHTML = '❤';
             heart.style.left = Math.random() * 100 + 'vw';
-            heart.style.animationDuration = (Math.random() * 4 + 4) + 's';
-            heart.style.fontSize = (Math.random() * 15 + 10) + 'px';
+            heart.style.animationDuration = (Math.random() * 3 + 4) + 's';
+            heart.style.fontSize = (Math.random() * 20 + 10) + 'px';
             document.body.appendChild(heart);
-            setTimeout(() => { heart.remove(); }, 7000);
+            setTimeout(() => { heart.remove(); }, 6000);
         }
-        setInterval(createHeart, 500);
+        // زيادة سرعة وكثافة القلوب
+        setInterval(createHeart, 300);
     </script>
 </body>
 </html>
